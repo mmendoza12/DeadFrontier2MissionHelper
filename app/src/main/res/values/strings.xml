@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Dead Frontier 2 Mission Helper</string>
+
+    <string name="mission_location">Mission Location: </string>
+    <string name="mission_town">Mission Town: </string>
+    <string name="mission_goal">Mission Goal: </string>
+    <string name="mission_walkthrough">Mission Walkthrough</string>
+
+    <string name="quest_giver">Quest Giver: </string>
+    <string name="quest_giver_town">Quest Giver Town: </string>
+    <string name="quest_giver_location">Quest Giver Location: </string>
+    <string name="quest_giver_walkthrough">Quest Giver Walkthrough: </string>
+
+    <string name="reward_money">Money: </string>
+    <string name="reward_exp">EXP: </string>
 </resources>
