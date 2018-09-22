@@ -25,19 +25,19 @@ public class Mission {
     private String mExp;
 
     /**
+     * Mission objects to hold the information for each mission.
      *
-     *
-     * @param missionTitle
-     * @param missionLocation
-     * @param missionTown
-     * @param missionGoal
-     * @param missionWalkthrough
-     * @param questGiver
-     * @param questGiverTown
-     * @param questGiverLocation
-     * @param questGiverWalkthrough
-     * @param money
-     * @param exp
+     * @param missionTitle The main objective of the mission.
+     * @param missionLocation The specific location of the mission. (Riverview Apartments A)
+     * @param missionTown The main town the mission objective is found within. (Archbrook)
+     * @param missionGoal The mission objective. (Find Person, Kill Infected, etc)
+     * @param missionWalkthrough Detailed steps on how to find/complete the objective.
+     * @param questGiver The name of the NPC that provides the quest. (John Doe)
+     * @param questGiverTown The town that the quest giver resides in. (Dallbow)
+     * @param questGiverLocation The specific location of the quest giver. (Dallbow Police Department)
+     * @param questGiverWalkthrough Detailed steps on how to find the quest giver.
+     * @param money Number representing the amount of money awarded upon completion. ($100)
+     * @param exp Number representing the amount of EXP awarded upon completion. (100XP)
      */
     public Mission(String missionTitle, String missionLocation, String missionTown, String missionGoal,
                    String missionWalkthrough, String questGiver, String questGiverTown,

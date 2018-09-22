@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity{
     private static final String URL = "http://deadfrontier2.wikia.com/wiki/Mission_guides";
 
     // Array of mission outpost names with bonus, used for spinner
-    String[] selections = {"Dallbow Police Department Missions", "Haverbrook Memorial Hospital Missions",
-            "Greywood Star Hotel Missions", "Bonus Missions"};
+    String[] selections = {"Dallbow Police Department Missions",
+            "Haverbrook Memorial Hospital Missions", "Greywood Star Hotel Missions", "Bonus Missions"};
 
     // Private member variables for the Date
     private TextView dateTextView;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
     private MissionListAdapter missionsListAdapter;
 
     // Arrays to hold Mission objects for each of the different cities
+    private ArrayList<Mission> selectedMissionsList = new ArrayList<>();
     private ArrayList<Mission> dallbowMissionsList = new ArrayList<>();
     private ArrayList<Mission> haverbrookMissionsList = new ArrayList<>();
     private ArrayList<Mission> greywoodMissionsList = new ArrayList<>();
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity{
         // ListView Adapter
         missionsListView = findViewById(R.id.missionsListView);
         missionsListAdapter =
-                new MissionListAdapter(this, R.layout.mission_list_item, dallbowMissionsList);
+                new MissionListAdapter(this, R.layout.mission_list_item, selectedMissionsList);
         missionsListView.setAdapter(missionsListAdapter);
 
         // Spinner adapter
@@ -75,15 +76,21 @@ public class MainActivity extends AppCompatActivity{
                 String selected = String.valueOf(spinner.getItemAtPosition(i));
                 // Clear the adapter
                 missionsListAdapter.clear();
+                selectedMissionsList.clear();
                 // Display the selected outpost's missions
                 if (String.valueOf(selected).equals("Dallbow Police Department Missions"))
-                    missionsListAdapter.addAll(dallbowMissionsList);
+                    //missionsListAdapter.addAll(dallbowMissionsList);
+                    selectedMissionsList.addAll(dallbowMissionsList);
                 else if (String.valueOf(selected).equals("Haverbrook Memorial Hospital Missions"))
-                    missionsListAdapter.addAll(haverbrookMissionsList);
+                    //missionsListAdapter.addAll(haverbrookMissionsList);
+                    selectedMissionsList.addAll(haverbrookMissionsList);
                 else if (String.valueOf(selected).equals("Greywood Star Hotel Missions"))
-                    missionsListAdapter.addAll(greywoodMissionsList);
+                    //missionsListAdapter.addAll(greywoodMissionsList);
+                    selectedMissionsList.addAll(greywoodMissionsList);
                 else
-                    missionsListAdapter.addAll(bonusMissionsList);
+                    //missionsListAdapter.addAll(bonusMissionsList);
+                    selectedMissionsList.addAll(bonusMissionsList);
+                missionsListAdapter.addAll(selectedMissionsList);
             }
 
             @Override
@@ -145,7 +152,7 @@ public class MainActivity extends AppCompatActivity{
                 //System.out.println("Bonus Mission Count: " + bonusMissions.size());
 
 
-                // TODO: Separate each area's missions into individual missions and its individual parts
+                // Separate each area's missions into individual missions and its individual parts
 
                 // TODO: Create mission objects from dallbowMissions and put them into dallbowMisisonsList
 
@@ -191,7 +198,7 @@ public class MainActivity extends AppCompatActivity{
                 //for (Mission mission : dallbowMissionsList)
                 //    System.out.println(mission.getMissionTitle());
 
-                // TODO: Create mission objects from haverbrookMissions and put them into haverbrookMisisonsList
+                // Create mission objects from haverbrookMissions and put them into haverbrookMisisonsList
 
                 // Get the data of each mission for Haverbrook
                 for (Element haverbrookMission : haverbrookMissions)
@@ -235,7 +242,7 @@ public class MainActivity extends AppCompatActivity{
                 //for (Mission mission : haverbrookMissionsList)
                 //    System.out.println(mission.getMissionTitle());
 
-                // TODO: Create mission objects from greywoodMissions and put them into greywoodMisisonsList
+                // Create mission objects from greywoodMissions and put them into greywoodMisisonsList
 
                 // Get the data of each mission for Greywood
                 for (Element greywoodMission : greywoodMissions)
@@ -279,7 +286,7 @@ public class MainActivity extends AppCompatActivity{
                 //for (Mission mission : greywoodMissionsList)
                 //    System.out.println(mission.getMissionTitle());
 
-                // TODO: Create mission objects from bonusMissions and put them into bonusMissionsList
+                // Create mission objects from bonusMissions and put them into bonusMissionsList
 
                 // Get the data of each mission for Bonus Missions
                 for (Element bonusMission : bonusMissions)
@@ -324,12 +331,7 @@ public class MainActivity extends AppCompatActivity{
                 //    System.out.println(mission.getMissionTitle());
 
 
-
-                // TODO: Everything
-
-
-                // Mission Titles (kinda broken, might just mission goals for titles, me thinks)
-                //Elements th = div.select("tr th");
+                // TODO: Remove old, useless code below
 
                 // Missions' info
                 //Elements td = div.select("td[style=vertical-align:top;text-align:center;width=450px;]");
@@ -357,12 +359,7 @@ public class MainActivity extends AppCompatActivity{
                 //Element x = td.select("div").get(3);
                 //System.out.println("*!!*!*!*! X TEXT: " + x.text());
 
-                //System.out.println("BODY TEXT:" + body.text());
-
                 //System.out.println("!!!!!DIV TEXT:" + div.text());
-
-                // Mission titles
-                //System.out.println("!!!!!TH TEXT:" + th.text());
 
                 //System.out.println("!!!!!TD TEXT:" + td.text());
 
