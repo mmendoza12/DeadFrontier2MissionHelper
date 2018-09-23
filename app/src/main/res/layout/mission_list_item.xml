@@ -14,7 +14,7 @@
         android:textColor="@color/white"
         android:gravity="center"
         android:textStyle="bold"
-        android:textSize="20sp"/>
+        android:textSize="18sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,51 +38,6 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/missTownTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="5dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="@string/mission_town"/>
-
-        <TextView
-            android:id="@+id/missionTownTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/green"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/missGoalTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="5dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="@string/mission_goal"/>
-
-        <TextView
-            android:id="@+id/missionGoalTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/green"
-            android:textStyle="bold"/>
-
-    </LinearLayout>
-
     <TextView
         android:id="@+id/missWalkTextView"
         android:layout_width="match_parent"
@@ -90,7 +45,7 @@
         android:paddingTop="5dp"
         android:textColor="@color/red"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:text="@string/mission_walkthrough"/>
 
     <TextView
@@ -128,28 +83,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/questGiveTownTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="5dp"
-            android:text="@string/quest_giver_town"
-            android:textColor="@color/white"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/questGiverTownTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@color/green"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
             android:id="@+id/questGiveLocTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -173,7 +106,7 @@
         android:paddingTop="5dp"
         android:text="@string/quest_giver_walkthrough"
         android:textColor="@color/red"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:textStyle="bold"/>
 
     <TextView
@@ -185,46 +118,56 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingVertical="3dp"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/rewMonTextView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/reward_money"
-            android:textColor="@color/white"
-            android:textStyle="bold"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/rewardMoneyTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/rewExpTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp"
+                android:text="@string/reward_exp"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/rewardExpTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@color/green"/>
-    </LinearLayout>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/rewMonTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp"
+                android:text="@string/reward_money"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/rewExpTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="5dp"
-            android:text="@string/reward_exp"
-            android:textColor="@color/white"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/rewardExpTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@color/green"/>
+            <TextView
+                android:id="@+id/rewardMoneyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

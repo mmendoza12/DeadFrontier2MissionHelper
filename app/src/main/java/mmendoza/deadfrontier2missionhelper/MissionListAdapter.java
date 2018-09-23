@@ -49,23 +49,17 @@ public class MissionListAdapter extends ArrayAdapter<Mission> {
         TextView missionTitle = view.findViewById(R.id.missionTitletextView);
         missionTitle.setText(selectedMission.getMissionTitle());
 
-        // Set the mission's location, town, goal, and walkthrough
+        // Set the mission's location (town), and walkthrough
         TextView missionLocation = view.findViewById(R.id.missionLocationTextView);
-        missionLocation.setText(selectedMission.getMissionLocation());
-        TextView missionTown = view.findViewById(R.id.missionTownTextView);
-        missionTown.setText(selectedMission.getMissionTown());
-        TextView missionGoal= view.findViewById(R.id.missionGoalTextView);
-        missionGoal.setText(selectedMission.getMissionGoal());
+        missionLocation.setText(selectedMission.getFullMissionLocation());
         TextView missionWalkthrough = view.findViewById(R.id.missionWalkthroughTextView);
         missionWalkthrough.setText(selectedMission.getMissionWalkthrough());
 
-        // Set the mission's quest giver name, town, location, and walkthrough
+        // Set the mission's quest giver name, location (town), and walkthrough
         TextView questGiver = view.findViewById(R.id.questGiverTextView);
         questGiver.setText(selectedMission.getQuestGiver());
-        TextView giverTown = view.findViewById(R.id.questGiverTownTextView);
-        giverTown.setText(selectedMission.getQuestGiverTown());
         TextView giverLocation = view.findViewById(R.id.questGiverLocationTextView);
-        giverLocation.setText(selectedMission.getQuestGiverLocation());
+        giverLocation.setText(selectedMission.getFullQuestGiverLocation());
         TextView giverWalkthrough = view.findViewById(R.id.questGiverWalkthroughTextView);
         giverWalkthrough.setText(selectedMission.getQuestGiverWalkthrough());
 

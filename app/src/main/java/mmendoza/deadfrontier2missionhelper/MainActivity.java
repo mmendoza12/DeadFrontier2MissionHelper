@@ -76,21 +76,15 @@ public class MainActivity extends AppCompatActivity{
                 String selected = String.valueOf(spinner.getItemAtPosition(i));
                 // Clear the adapter
                 missionsListAdapter.clear();
-                selectedMissionsList.clear();
                 // Display the selected outpost's missions
                 if (String.valueOf(selected).equals("Dallbow Police Department Missions"))
-                    //missionsListAdapter.addAll(dallbowMissionsList);
-                    selectedMissionsList.addAll(dallbowMissionsList);
+                    missionsListAdapter.addAll(dallbowMissionsList);
                 else if (String.valueOf(selected).equals("Haverbrook Memorial Hospital Missions"))
-                    //missionsListAdapter.addAll(haverbrookMissionsList);
-                    selectedMissionsList.addAll(haverbrookMissionsList);
+                    missionsListAdapter.addAll(haverbrookMissionsList);
                 else if (String.valueOf(selected).equals("Greywood Star Hotel Missions"))
-                    //missionsListAdapter.addAll(greywoodMissionsList);
-                    selectedMissionsList.addAll(greywoodMissionsList);
+                    missionsListAdapter.addAll(greywoodMissionsList);
                 else
-                    //missionsListAdapter.addAll(bonusMissionsList);
-                    selectedMissionsList.addAll(bonusMissionsList);
-                missionsListAdapter.addAll(selectedMissionsList);
+                    missionsListAdapter.addAll(bonusMissionsList);
             }
 
             @Override
@@ -130,238 +124,32 @@ public class MainActivity extends AppCompatActivity{
 
                 // Get the Date from the wikia, let the user know if the missions need to be updated
                 date = body.select("article > div > div div > h2 > span").get(0).text();
-                //System.out.println("Date: " + date);
-
 
                 // Separate missions by Dallbow, Haverbrook, Greywood, and Bonus
-
                 // Dallbow Missions
                 Elements dallbowMissions = div.get(0).select("td[style=vertical-align:top;text-align:center;width=450px;]");
-                //System.out.println("Dallbow Mission Count: " + dallbowMissions.size());
 
                 // Haverbrook Missions
                 Elements haverbrookMissions = div.get(1).select("td[style=vertical-align:top;text-align:center;width=450px;]");
-                //System.out.println("Haverbrook Mission Count: " + haverbrookMissions.size());
 
                 // Greywood Missions
                 Elements greywoodMissions = div.get(2).select("td[style=vertical-align:top;text-align:center;width=450px;]");
-                //System.out.println("Greywood Mission Count: " + greywoodMissions.size());
 
                 // Bonus Missions
                 Elements bonusMissions = div.get(3).select("td[style=vertical-align:top;text-align:center;width=450px;]");
-                //System.out.println("Bonus Mission Count: " + bonusMissions.size());
-
 
                 // Separate each area's missions into individual missions and its individual parts
-
-                // TODO: Create mission objects from dallbowMissions and put them into dallbowMisisonsList
-
-                // Get the data of each mission for Dallbow
-                for (Element dallbowMission : dallbowMissions)
-                {
-                    // Mission Location
-                    Element missionLocation = dallbowMission.select("span").get(0);
-                    // Mission Town
-                    Element missionTown = dallbowMission.select("span").get(1);
-                    // Mission Goal
-                    Element missionGoal = dallbowMission.select("span").get(2);
-                    // Mission Chunk 1 (divs embedded within div)
-                    Element missionChunk1 = dallbowMission.select("div").get(3);
-                    // Mission Walkthrough
-                    Element missionWalkthrough = missionChunk1.select("p").get(0);
-                    // Quest Giver
-                    Element questGiver = missionChunk1.select("span").get(0);
-                    // Quest Giver Town
-                    Element questGiverTown = missionChunk1.select("span").get(1);
-                    // Quest Giver location
-                    Element questGiverLocation = missionChunk1.select("span").get(2);
-                    // Mission Chunk 2 (divs further embedded within div)
-                    Element missionChunk2 = missionChunk1.select("div").get(5);
-                    // Quest Giver Walkthrough
-                    Element questGiverWalkthrough = missionChunk2.select("p").get(0);
-                    // Mission Reward Money
-                    Element rewardMoney = missionChunk2.select("span").get(0);
-                    // Mission Reward Exp
-                    Element rewardExp = missionChunk2.select("span").get(1);
-
-                    // Create a Mission object from the data
-                    Mission mission = new Mission(missionGoal.text(), missionLocation.text(), missionTown.text(), missionGoal.text(),
-                            missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
-                            questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
-
-                    // Add the mission object to the mission list
-                    dallbowMissionsList.add(mission);
-                }
-
-                // Test output for dallbowMissionsList
-                //System.out.println("Dallbow Missions:");
-                //for (Mission mission : dallbowMissionsList)
-                //    System.out.println(mission.getMissionTitle());
+                // Create mission objects from dallbowMissions and put them into dallbowMisisonsList
+                createMissions(dallbowMissionsList, dallbowMissions);
 
                 // Create mission objects from haverbrookMissions and put them into haverbrookMisisonsList
-
-                // Get the data of each mission for Haverbrook
-                for (Element haverbrookMission : haverbrookMissions)
-                {
-                    // Mission Location
-                    Element missionLocation = haverbrookMission.select("span").get(0);
-                    // Mission Town
-                    Element missionTown = haverbrookMission.select("span").get(1);
-                    // Mission Goal
-                    Element missionGoal = haverbrookMission.select("span").get(2);
-                    // Mission Chunk 1 (divs embedded within div)
-                    Element missionChunk1 = haverbrookMission.select("div").get(3);
-                    // Mission Walkthrough
-                    Element missionWalkthrough = missionChunk1.select("p").get(0);
-                    // Quest Giver
-                    Element questGiver = missionChunk1.select("span").get(0);
-                    // Quest Giver Town
-                    Element questGiverTown = missionChunk1.select("span").get(1);
-                    // Quest Giver location
-                    Element questGiverLocation = missionChunk1.select("span").get(2);
-                    // Mission Chunk 2 (divs further embedded within div)
-                    Element missionChunk2 = missionChunk1.select("div").get(5);
-                    // Quest Giver Walkthrough
-                    Element questGiverWalkthrough = missionChunk2.select("p").get(0);
-                    // Mission Reward Money
-                    Element rewardMoney = missionChunk2.select("span").get(0);
-                    // Mission Reward Exp
-                    Element rewardExp = missionChunk2.select("span").get(1);
-
-                    // Create a Mission object from the data
-                    Mission mission = new Mission(missionGoal.text(), missionLocation.text(), missionTown.text(), missionGoal.text(),
-                            missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
-                            questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
-
-                    // Add the mission object to the mission list
-                    haverbrookMissionsList.add(mission);
-                }
-
-                // Test output for haverbrookMissionsList
-                //System.out.println("Haverbrook Missions:");
-                //for (Mission mission : haverbrookMissionsList)
-                //    System.out.println(mission.getMissionTitle());
+                createMissions(haverbrookMissionsList, haverbrookMissions);
 
                 // Create mission objects from greywoodMissions and put them into greywoodMisisonsList
-
-                // Get the data of each mission for Greywood
-                for (Element greywoodMission : greywoodMissions)
-                {
-                    // Mission Location
-                    Element missionLocation = greywoodMission.select("span").get(0);
-                    // Mission Town
-                    Element missionTown = greywoodMission.select("span").get(1);
-                    // Mission Goal
-                    Element missionGoal = greywoodMission.select("span").get(2);
-                    // Mission Chunk 1 (divs embedded within div)
-                    Element missionChunk1 = greywoodMission.select("div").get(3);
-                    // Mission Walkthrough
-                    Element missionWalkthrough = missionChunk1.select("p").get(0);
-                    // Quest Giver
-                    Element questGiver = missionChunk1.select("span").get(0);
-                    // Quest Giver Town
-                    Element questGiverTown = missionChunk1.select("span").get(1);
-                    // Quest Giver location
-                    Element questGiverLocation = missionChunk1.select("span").get(2);
-                    // Mission Chunk 2 (divs further embedded within div)
-                    Element missionChunk2 = missionChunk1.select("div").get(5);
-                    // Quest Giver Walkthrough
-                    Element questGiverWalkthrough = missionChunk2.select("p").get(0);
-                    // Mission Reward Money
-                    Element rewardMoney = missionChunk2.select("span").get(0);
-                    // Mission Reward Exp
-                    Element rewardExp = missionChunk2.select("span").get(1);
-
-                    // Create a Mission object from the data
-                    Mission mission = new Mission(missionGoal.text(), missionLocation.text(), missionTown.text(), missionGoal.text(),
-                            missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
-                            questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
-
-                    // Add the mission object to the mission list
-                    greywoodMissionsList.add(mission);
-                }
-
-                // Test output for greywoodMissionsList
-                //System.out.println("Greywood Missions:");
-                //for (Mission mission : greywoodMissionsList)
-                //    System.out.println(mission.getMissionTitle());
+                createMissions(greywoodMissionsList, greywoodMissions);
 
                 // Create mission objects from bonusMissions and put them into bonusMissionsList
-
-                // Get the data of each mission for Bonus Missions
-                for (Element bonusMission : bonusMissions)
-                {
-                    // Mission Location
-                    Element missionLocation = bonusMission.select("span").get(0);
-                    // Mission Town
-                    Element missionTown = bonusMission.select("span").get(1);
-                    // Mission Goal
-                    Element missionGoal = bonusMission.select("span").get(2);
-                    // Mission Chunk 1 (divs embedded within div)
-                    Element missionChunk1 = bonusMission.select("div").get(3);
-                    // Mission Walkthrough
-                    Element missionWalkthrough = missionChunk1.select("p").get(0);
-                    // Quest Giver
-                    Element questGiver = missionChunk1.select("span").get(0);
-                    // Quest Giver Town
-                    Element questGiverTown = missionChunk1.select("span").get(1);
-                    // Quest Giver location
-                    Element questGiverLocation = missionChunk1.select("span").get(2);
-                    // Mission Chunk 2 (divs further embedded within div)
-                    Element missionChunk2 = missionChunk1.select("div").get(5);
-                    // Quest Giver Walkthrough
-                    Element questGiverWalkthrough = missionChunk2.select("p").get(0);
-                    // Mission Reward Money
-                    Element rewardMoney = missionChunk2.select("span").get(0);
-                    // Mission Reward Exp
-                    Element rewardExp = missionChunk2.select("span").get(1);
-
-                    // Create a Mission object from the data
-                    Mission mission = new Mission(missionGoal.text(), missionLocation.text(), missionTown.text(), missionGoal.text(),
-                            missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
-                            questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
-
-                    // Add the mission object to the mission list
-                    bonusMissionsList.add(mission);
-                }
-
-                // Test output for bonusMissionsList
-                //System.out.println("Bonus Missions:");
-                //for (Mission mission : bonusMissionsList)
-                //    System.out.println(mission.getMissionTitle());
-
-
-                // TODO: Remove old, useless code below
-
-                // Missions' info
-                //Elements td = div.select("td[style=vertical-align:top;text-align:center;width=450px;]");
-
-                // Missions count (YES! There are 57 missions! It output 57!)
-                //System.out.println("*!*!*!* Mission Count: " + td.size());
-
-                // Mission 2
-                //Element mission2 = td.get(1);
-                //System.out.println(mission2.select("div").get(2).text());
-
-                // Mission Location
-                //Element missionLocation = td.select("div").get(0);
-                //System.out.println("*!!*!*!*! MLOCATION TEXT: " + missionLocation.text());
-
-                // Mission Town
-                //Element missionTown = td.select("div").get(1);
-                //System.out.println("*!!*!*!*! MTOWN TEXT: " + missionTown.text());
-
-                // Mission Goal
-                //Element missionGoal = td.select("div").get(2);
-                //System.out.println("*!!*!*!*! MGOAL TEXT: " + missionGoal.text());
-
-                // Rest of the mission's info in one... gotta separate them
-                //Element x = td.select("div").get(3);
-                //System.out.println("*!!*!*!*! X TEXT: " + x.text());
-
-                //System.out.println("!!!!!DIV TEXT:" + div.text());
-
-                //System.out.println("!!!!!TD TEXT:" + td.text());
+                createMissions(bonusMissionsList, bonusMissions);
 
             } catch (IOException e)
             {
@@ -378,4 +166,49 @@ public class MainActivity extends AppCompatActivity{
             dateTextView.setText(date);
         }
     }
+
+    /**
+     * Function used to gather the missions' info from each outpost (Dallbow PD, Greywood Hotel, etc.)
+     *
+     * @param selectableMissions A list to add the specific outpost's missions to
+     * @param missions The data of the missions for the different outposts
+     */
+     public void createMissions(ArrayList<Mission> selectableMissions, Elements missions)
+     {
+         for (Element mission : missions) {
+
+             // Mission Location
+             Element missionLocation = mission.select("span").get(0);
+             // Mission Town
+             Element missionTown = mission.select("span").get(1);
+             // Mission Goal
+             Element missionGoal = mission.select("span").get(2);
+             // Mission Chunk 1 (divs embedded within div)
+             Element missionChunk1 = mission.select("div").get(3);
+             // Mission Walkthrough
+             Element missionWalkthrough = missionChunk1.select("p").get(0);
+             // Quest Giver
+             Element questGiver = missionChunk1.select("span").get(0);
+             // Quest Giver Town
+             Element questGiverTown = missionChunk1.select("span").get(1);
+             // Quest Giver location
+             Element questGiverLocation = missionChunk1.select("span").get(2);
+             // Mission Chunk 2 (divs further embedded within div)
+             Element missionChunk2 = missionChunk1.select("div").get(5);
+             // Quest Giver Walkthrough
+             Element questGiverWalkthrough = missionChunk2.select("p").get(0);
+             // Mission Reward Money
+             Element rewardMoney = missionChunk2.select("span").get(0);
+             // Mission Reward Exp
+             Element rewardExp = missionChunk2.select("span").get(1);
+
+             // Create a Mission object from the data
+             Mission selectableMission = new Mission(missionGoal.text(), missionLocation.text(), missionTown.text(), missionGoal.text(),
+                     missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
+                     questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
+
+             // Add the mission object to the mission list
+             selectableMissions.add(selectableMission);
+         }
+     }
 }

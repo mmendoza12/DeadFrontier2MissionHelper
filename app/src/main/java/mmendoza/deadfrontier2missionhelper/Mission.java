@@ -212,4 +212,25 @@ public class Mission {
         mExp = exp;
     }
 
+    /**
+     * Returns the mission specific location and town in a single string.
+     *
+     * @return A string containing the mission location and town. Ex: Dallbow Apartments (Dallbow)
+     */
+    public String getFullMissionLocation()
+    {
+        return mMissionLocation + " (" + mMissionTown + ")";
+    }
+
+    /**
+     * Returns the quest giver's specific location and town in a single string.
+     *
+     * @return A string containing the quest giver's location and town. Ex: Dallbow PD (Dallbow)
+     */
+    public String getFullQuestGiverLocation()
+    {
+        return mQuestGiverLocation + " (" + mQuestGiverTown+ ")";
+    }
+
+
 }
