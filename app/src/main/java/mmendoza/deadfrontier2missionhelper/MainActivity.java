@@ -23,16 +23,21 @@ public class MainActivity extends AppCompatActivity{
     // URL for Dead Frontier 2 Mission Guide Wikia
     private static final String URL = "http://deadfrontier2.wikia.com/wiki/Mission_guides";
 
-    // Array of mission outpost names with bonus, used for spinner
-    String[] selections = {"Dallbow Police Department Missions",
-            "Haverbrook Memorial Hospital Missions", "Greywood Star Hotel Missions", "Bonus Missions"};
+    // Array of town names, used for both spinners
+    String[] towns = {"-- No Town Selected --", "All Towns", "Albandale Park", "Archbrook",
+            "Coopertown", "Dallbow", "Dawnhill", "Duntsville", "Greywood", "Haverbrook", "Lerwillbury",
+            "Ravenwall Heights", "Richbow Hunt", "South Moorhurst", "West Moledale"};
+
+    // Database Helper
+    private DBHelper db;
 
     // Private member variables for the Date
     private TextView dateTextView;
     private String date;
 
-    // Private member variable for the spinner
-    private Spinner missionSpinner;
+    // Private member variable for the spinners
+    private Spinner missionTownSpinner;
+    private Spinner giverTownSpinner;
 
     // Private member variables for the listView and adapter
     private ListView missionsListView;
@@ -50,12 +55,17 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create the database
+        deleteDatabase(DBHelper.DATABASE_NAME); // TODO : DO NOT DELETE DB IN FINAL VERSION, INSTEAD FIGURE WAY TO UPDATE DATA
+        db = new DBHelper(this);
+
         // Start the Jsoup processes
         new Missions().execute();
 
         // Connect the variables
         dateTextView = findViewById(R.id.dateTextView);
-        missionSpinner = findViewById(R.id.missionSpinner);
+        missionTownSpinner = findViewById(R.id.missionTownSpinner);
+        giverTownSpinner = findViewById(R.id.giverTownSpinner);
 
         // ListView Adapter
         missionsListView = findViewById(R.id.missionsListView);
@@ -63,28 +73,41 @@ public class MainActivity extends AppCompatActivity{
                 new MissionListAdapter(this, R.layout.mission_list_item, selectedMissionsList);
         missionsListView.setAdapter(missionsListAdapter);
 
-        // Spinner adapter
-        final ArrayAdapter<String> missionSpinnerAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, selections);
-        missionSpinner.setAdapter(missionSpinnerAdapter);
+        // Mission objective town spinner adapter
+        final ArrayAdapter<String> missionTownSpinnerAdatper =
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, towns);
+        missionTownSpinner.setAdapter(missionTownSpinnerAdatper);
 
-        // Spinner Listener
-        AdapterView.OnItemSelectedListener missionSpinnerListener = new AdapterView.OnItemSelectedListener() {
+        // Giver town spinner adapter
+        final ArrayAdapter<String> giverTownSpinnerAdapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, towns);
+        giverTownSpinner.setAdapter(giverTownSpinnerAdapter);
+
+        // Mission town spinner Listener
+        AdapterView.OnItemSelectedListener missionTownSpinnerListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> spinner, View view, int i, long l) {
-                // Get the outpost
+                // Get the selected towns
                 String selected = String.valueOf(spinner.getItemAtPosition(i));
+                String giverTown = String.valueOf(giverTownSpinner.getSelectedItem());
+
+                // Display the selected town's missions
                 // Clear the adapter
                 missionsListAdapter.clear();
-                // Display the selected outpost's missions
-                if (String.valueOf(selected).equals("Dallbow Police Department Missions"))
-                    missionsListAdapter.addAll(dallbowMissionsList);
-                else if (String.valueOf(selected).equals("Haverbrook Memorial Hospital Missions"))
-                    missionsListAdapter.addAll(haverbrookMissionsList);
-                else if (String.valueOf(selected).equals("Greywood Star Hotel Missions"))
-                    missionsListAdapter.addAll(greywoodMissionsList);
-                else
-                    missionsListAdapter.addAll(bonusMissionsList);
+                // Mission town selected
+                if (!selected.equals("-- No Town Selected --"))
+                    // All towns selected for both spinners
+                    if (selected.equals("All Towns") && giverTown.equals("All Towns"))
+                        missionsListAdapter.addAll(db.getAllMissions());
+                    // Specific mission town, all giver towns
+                    else if (!selected.equals("All Towns") && giverTown.equals("All Towns"))
+                        missionsListAdapter.addAll(db.getAllMissionsFromMissionTown(selected));
+                    // All mission towns, specific giver town
+                    else if (selected.equals("All Towns") && !giverTown.equals("All Towns"))
+                        missionsListAdapter.addAll(db.getAllMissionsFromGiverTown(giverTown));
+                    // Specific towns selected for both spinners
+                    else
+                        missionsListAdapter.addAll(db.getAllMissionsFromBothTowns(selected, giverTown));
             }
 
             @Override
@@ -92,8 +115,66 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
-        // Set the spinner listener
-        missionSpinner.setOnItemSelectedListener(missionSpinnerListener);
+        // Giver town spinner Listener
+        AdapterView.OnItemSelectedListener giverTownSpinnerListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> spinner, View view, int i, long l) {
+                // Get the selected towns
+                String missionTown = String.valueOf(missionTownSpinner.getSelectedItem());
+                String selected = String.valueOf(spinner.getItemAtPosition(i));
+
+                // Display the selected town's missions
+                // Clear the adapter
+                missionsListAdapter.clear();
+                // Giver town selected
+                if (!selected.equals("-- No Town Selected --"))
+                    // All towns selected for both spinners
+                    if (missionTown.equals("All Towns") && selected.equals("All Towns"))
+                        missionsListAdapter.addAll(db.getAllMissions());
+                    // Specific mission town, all giver towns
+                    else if (!missionTown.equals("All Towns") && selected.equals("All Towns"))
+                        missionsListAdapter.addAll(db.getAllMissionsFromMissionTown(missionTown));
+                    // All mission towns, specific giver town
+                    else if (missionTown.equals("All Towns") && !selected.equals("All Towns"))
+                        missionsListAdapter.addAll(db.getAllMissionsFromGiverTown(selected));
+                    // Specific towns selected for both spinners
+                    else
+                        missionsListAdapter.addAll(db.getAllMissionsFromBothTowns(missionTown, selected));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        };
+
+        // Set the spinner listeners
+        missionTownSpinner.setOnItemSelectedListener(missionTownSpinnerListener);
+        giverTownSpinner.setOnItemSelectedListener(giverTownSpinnerListener);
+
+        /**
+         * Add single tap functionality to list items
+         */
+        missionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+
+                // The mission the user clicked
+                Mission selectedMission = selectedMissionsList.get(pos);
+
+                // Toggle whether a mission is marked as completed or not
+                if (selectedMission.isCompleted()) {
+                    selectedMission.setCompleted(false);
+                    db.updateMissionCompletionStatus(selectedMission, selectedMission.getQuestGiver());
+                }
+                else {
+                    selectedMission.setCompleted(true);
+                    db.updateMissionCompletionStatus(selectedMission, selectedMission.getQuestGiver());
+                }
+
+                // Update the list
+                missionsListAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -151,6 +232,12 @@ public class MainActivity extends AppCompatActivity{
                 // Create mission objects from bonusMissions and put them into bonusMissionsList
                 createMissions(bonusMissionsList, bonusMissions);
 
+                // Populate the database
+                db.addAllMissions(dallbowMissionsList);
+                db.addAllMissions(haverbrookMissionsList);
+                db.addAllMissions(greywoodMissionsList);
+                db.addAllMissions(bonusMissionsList);
+
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -162,7 +249,7 @@ public class MainActivity extends AppCompatActivity{
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
-            // Update the textView(s) with the missions' data
+            // Update the textView with the date
             dateTextView.setText(date);
         }
     }
@@ -203,7 +290,7 @@ public class MainActivity extends AppCompatActivity{
              Element rewardExp = missionChunk2.select("span").get(1);
 
              // Create a Mission object from the data
-             Mission selectableMission = new Mission(missionGoal.text(), missionLocation.text(), missionTown.text(), missionGoal.text(),
+             Mission selectableMission = new Mission(missionLocation.text(), missionTown.text(), missionGoal.text(),
                      missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
                      questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
 

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Dead Frontier 2 Mission Helper</string>
 
+    <string name="mission_filter">Mission Objective Town: </string>
+    <string name="giver_filter">Mission Giver Town: </string>
+
     <string name="mission_location">Mission Location: </string>
     <string name="mission_town">Mission Town: </string>
     <string name="mission_goal">Mission Goal: </string>

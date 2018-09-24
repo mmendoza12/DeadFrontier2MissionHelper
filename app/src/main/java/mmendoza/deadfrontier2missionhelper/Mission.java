@@ -8,7 +8,6 @@ package mmendoza.deadfrontier2missionhelper;
 public class Mission {
 
     // Mission information
-    private String mMissionTitle;
     private String mMissionLocation;
     private String mMissionTown;
     private String mMissionGoal;
@@ -24,10 +23,12 @@ public class Mission {
     private String mMoney;
     private String mExp;
 
+    // Personal Completion status
+    private boolean mIsCompleted;
+
     /**
      * Mission objects to hold the information for each mission.
      *
-     * @param missionTitle The main objective of the mission.
      * @param missionLocation The specific location of the mission. (Riverview Apartments A)
      * @param missionTown The main town the mission objective is found within. (Archbrook)
      * @param missionGoal The mission objective. (Find Person, Kill Infected, etc)
@@ -39,11 +40,10 @@ public class Mission {
      * @param money Number representing the amount of money awarded upon completion. ($100)
      * @param exp Number representing the amount of EXP awarded upon completion. (100XP)
      */
-    public Mission(String missionTitle, String missionLocation, String missionTown, String missionGoal,
+    public Mission(String missionLocation, String missionTown, String missionGoal,
                    String missionWalkthrough, String questGiver, String questGiverTown,
                    String questGiverLocation, String questGiverWalkthrough, String money, String exp)
     {
-        mMissionTitle = missionTitle;
         mMissionLocation = missionLocation;
         mMissionTown = missionTown;
         mMissionGoal = missionGoal;
@@ -54,22 +54,7 @@ public class Mission {
         mQuestGiverWalkthrough = questGiverWalkthrough;
         mMoney = money;
         mExp = exp;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getMissionTitle() {
-        return mMissionTitle;
-    }
-
-    /**
-     *
-     * @param missionTitle
-     */
-    public void setMissionTitle(String missionTitle) {
-        mMissionTitle = missionTitle;
+        mIsCompleted = false;
     }
 
     /**
@@ -203,6 +188,24 @@ public class Mission {
      */
     public String getExp() {
         return mExp;
+    }
+
+    /**
+     * Returns whether a mission is completed for the user or not.
+     *
+     * @return The specific mission's completion status.
+     */
+    public boolean isCompleted() {
+        return mIsCompleted;
+    }
+
+    /**
+     * Used for the user to check whether they have completed the specific mission or not.
+     *
+     * @param completed The new completion status.
+     */
+    public void setCompleted(boolean completed) {
+        mIsCompleted = completed;
     }
 
     /**
