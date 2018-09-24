@@ -271,15 +271,16 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * Update a mission's completion status.
      */
-    public void updateMissionCompletionStatus(Mission mission, String questGiver)
+    public void updateMissionCompletionStatus(int isCompleted, String questGiver)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(FIELD_COMPLETED, mission.isCompleted());
+        values.put(FIELD_COMPLETED, isCompleted);
 
         db.update(MISSIONS_TABLE, values, FIELD_QUEST_GIVER + " = ?",
                 new String[] {questGiver});
+
         db.close();
     }
 }

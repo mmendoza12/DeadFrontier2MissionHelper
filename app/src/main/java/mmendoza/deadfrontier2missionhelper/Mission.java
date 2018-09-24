@@ -24,7 +24,7 @@ public class Mission {
     private String mExp;
 
     // Personal Completion status
-    private boolean mIsCompleted;
+    private int mIsCompleted;
 
     /**
      * Mission objects to hold the information for each mission.
@@ -54,7 +54,7 @@ public class Mission {
         mQuestGiverWalkthrough = questGiverWalkthrough;
         mMoney = money;
         mExp = exp;
-        mIsCompleted = false;
+        mIsCompleted = 0;
     }
 
     /**
@@ -195,7 +195,7 @@ public class Mission {
      *
      * @return The specific mission's completion status.
      */
-    public boolean isCompleted() {
+    public int isCompleted() {
         return mIsCompleted;
     }
 
@@ -204,7 +204,7 @@ public class Mission {
      *
      * @param completed The new completion status.
      */
-    public void setCompleted(boolean completed) {
+    public void setCompleted(int completed) {
         mIsCompleted = completed;
     }
 

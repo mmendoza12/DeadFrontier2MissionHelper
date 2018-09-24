@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity{
 
     // Arrays to hold Mission objects for each of the different cities
     private ArrayList<Mission> selectedMissionsList = new ArrayList<>();
-    private ArrayList<Mission> dallbowMissionsList = new ArrayList<>();
-    private ArrayList<Mission> haverbrookMissionsList = new ArrayList<>();
-    private ArrayList<Mission> greywoodMissionsList = new ArrayList<>();
-    private ArrayList<Mission> bonusMissionsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +70,9 @@ public class MainActivity extends AppCompatActivity{
         missionsListView.setAdapter(missionsListAdapter);
 
         // Mission objective town spinner adapter
-        final ArrayAdapter<String> missionTownSpinnerAdatper =
+        final ArrayAdapter<String> missionTownSpinnerAdapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, towns);
-        missionTownSpinner.setAdapter(missionTownSpinnerAdatper);
+        missionTownSpinner.setAdapter(missionTownSpinnerAdapter);
 
         // Giver town spinner adapter
         final ArrayAdapter<String> giverTownSpinnerAdapter =
@@ -90,24 +86,10 @@ public class MainActivity extends AppCompatActivity{
                 // Get the selected towns
                 String selected = String.valueOf(spinner.getItemAtPosition(i));
                 String giverTown = String.valueOf(giverTownSpinner.getSelectedItem());
-
-                // Display the selected town's missions
                 // Clear the adapter
                 missionsListAdapter.clear();
-                // Mission town selected
-                if (!selected.equals("-- No Town Selected --"))
-                    // All towns selected for both spinners
-                    if (selected.equals("All Towns") && giverTown.equals("All Towns"))
-                        missionsListAdapter.addAll(db.getAllMissions());
-                    // Specific mission town, all giver towns
-                    else if (!selected.equals("All Towns") && giverTown.equals("All Towns"))
-                        missionsListAdapter.addAll(db.getAllMissionsFromMissionTown(selected));
-                    // All mission towns, specific giver town
-                    else if (selected.equals("All Towns") && !giverTown.equals("All Towns"))
-                        missionsListAdapter.addAll(db.getAllMissionsFromGiverTown(giverTown));
-                    // Specific towns selected for both spinners
-                    else
-                        missionsListAdapter.addAll(db.getAllMissionsFromBothTowns(selected, giverTown));
+                // Display the selected town's missions
+                spinnerItemSelected(selected, giverTown);
             }
 
             @Override
@@ -122,24 +104,10 @@ public class MainActivity extends AppCompatActivity{
                 // Get the selected towns
                 String missionTown = String.valueOf(missionTownSpinner.getSelectedItem());
                 String selected = String.valueOf(spinner.getItemAtPosition(i));
-
-                // Display the selected town's missions
                 // Clear the adapter
                 missionsListAdapter.clear();
-                // Giver town selected
-                if (!selected.equals("-- No Town Selected --"))
-                    // All towns selected for both spinners
-                    if (missionTown.equals("All Towns") && selected.equals("All Towns"))
-                        missionsListAdapter.addAll(db.getAllMissions());
-                    // Specific mission town, all giver towns
-                    else if (!missionTown.equals("All Towns") && selected.equals("All Towns"))
-                        missionsListAdapter.addAll(db.getAllMissionsFromMissionTown(missionTown));
-                    // All mission towns, specific giver town
-                    else if (missionTown.equals("All Towns") && !selected.equals("All Towns"))
-                        missionsListAdapter.addAll(db.getAllMissionsFromGiverTown(selected));
-                    // Specific towns selected for both spinners
-                    else
-                        missionsListAdapter.addAll(db.getAllMissionsFromBothTowns(missionTown, selected));
+                // Display the selected town's missions
+                spinnerItemSelected(missionTown, selected);
             }
 
             @Override
@@ -151,9 +119,7 @@ public class MainActivity extends AppCompatActivity{
         missionTownSpinner.setOnItemSelectedListener(missionTownSpinnerListener);
         giverTownSpinner.setOnItemSelectedListener(giverTownSpinnerListener);
 
-        /**
-         * Add single tap functionality to list items
-         */
+        // Add single tap functionality to list items
         missionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
@@ -162,13 +128,14 @@ public class MainActivity extends AppCompatActivity{
                 Mission selectedMission = selectedMissionsList.get(pos);
 
                 // Toggle whether a mission is marked as completed or not
-                if (selectedMission.isCompleted()) {
-                    selectedMission.setCompleted(false);
-                    db.updateMissionCompletionStatus(selectedMission, selectedMission.getQuestGiver());
+                if (selectedMission.isCompleted() == 1) {
+                    selectedMission.setCompleted(0);
+                    db.updateMissionCompletionStatus(0, selectedMission.getQuestGiver());
                 }
                 else {
-                    selectedMission.setCompleted(true);
-                    db.updateMissionCompletionStatus(selectedMission, selectedMission.getQuestGiver());
+                    selectedMission.setCompleted(1);
+                    // TODO: Maybe including the completion status in the mission constructor would fix this
+                    db.updateMissionCompletionStatus(1, selectedMission.getQuestGiver());
                 }
 
                 // Update the list
@@ -206,7 +173,7 @@ public class MainActivity extends AppCompatActivity{
                 // Get the Date from the wikia, let the user know if the missions need to be updated
                 date = body.select("article > div > div div > h2 > span").get(0).text();
 
-                // Separate missions by Dallbow, Haverbrook, Greywood, and Bonus
+                // Separate missions by Dallbow, Haverbrook, Greywood, and Bonus categories
                 // Dallbow Missions
                 Elements dallbowMissions = div.get(0).select("td[style=vertical-align:top;text-align:center;width=450px;]");
 
@@ -219,24 +186,12 @@ public class MainActivity extends AppCompatActivity{
                 // Bonus Missions
                 Elements bonusMissions = div.get(3).select("td[style=vertical-align:top;text-align:center;width=450px;]");
 
-                // Separate each area's missions into individual missions and its individual parts
-                // Create mission objects from dallbowMissions and put them into dallbowMisisonsList
-                createMissions(dallbowMissionsList, dallbowMissions);
-
-                // Create mission objects from haverbrookMissions and put them into haverbrookMisisonsList
-                createMissions(haverbrookMissionsList, haverbrookMissions);
-
-                // Create mission objects from greywoodMissions and put them into greywoodMisisonsList
-                createMissions(greywoodMissionsList, greywoodMissions);
-
-                // Create mission objects from bonusMissions and put them into bonusMissionsList
-                createMissions(bonusMissionsList, bonusMissions);
-
-                // Populate the database
-                db.addAllMissions(dallbowMissionsList);
-                db.addAllMissions(haverbrookMissionsList);
-                db.addAllMissions(greywoodMissionsList);
-                db.addAllMissions(bonusMissionsList);
+                // Separate each category's missions into individual missions and its individual parts
+                // Create lists of mission objects and use them to populate the database
+                db.addAllMissions(createMissions(dallbowMissions));
+                db.addAllMissions(createMissions(haverbrookMissions));
+                db.addAllMissions(createMissions(greywoodMissions));
+                db.addAllMissions(createMissions(bonusMissions));
 
             } catch (IOException e)
             {
@@ -255,13 +210,16 @@ public class MainActivity extends AppCompatActivity{
     }
 
     /**
-     * Function used to gather the missions' info from each outpost (Dallbow PD, Greywood Hotel, etc.)
+     * Function used to gather the missions' info from the wikia's categories.
+     * Dallbow Police Department, Haverbrook Memorial Hospital, Greywood Star Hotel, Bonus (other)
      *
-     * @param selectableMissions A list to add the specific outpost's missions to
-     * @param missions The data of the missions for the different outposts
+     * @param missions The data of the missions for a single category.
+     * @return categoryMissions
      */
-     public void createMissions(ArrayList<Mission> selectableMissions, Elements missions)
+     public ArrayList<Mission> createMissions(Elements missions)
      {
+         ArrayList<Mission> categoryMissions = new ArrayList<>();
+
          for (Element mission : missions) {
 
              // Mission Location
@@ -294,8 +252,35 @@ public class MainActivity extends AppCompatActivity{
                      missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
                      questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
 
-             // Add the mission object to the mission list
-             selectableMissions.add(selectableMission);
+             // Add the mission object to the database
+             categoryMissions.add(selectableMission);
          }
+
+         return  categoryMissions;
      }
+
+    /**
+     * Method used by both spinner listeners to filter the different possible combinations of mission and quest giver towns.
+     *
+     * @param missionTown The specified mission town(s).
+     * @param giverTown The specified quest giver town(s).
+     */
+    public void spinnerItemSelected(String missionTown, String giverTown)
+    {
+        // TODO: Use this method instead of repetitive code in both spinner listeners
+        // Giver town selected
+        if (!missionTown.equals("-- No Town Selected --"))
+            // All towns selected for both spinners
+            if (missionTown.equals("All Towns") && giverTown.equals("All Towns"))
+                missionsListAdapter.addAll(db.getAllMissions());
+                // Specific mission town, all giver towns
+            else if (!missionTown.equals("All Towns") && giverTown.equals("All Towns"))
+                missionsListAdapter.addAll(db.getAllMissionsFromMissionTown(missionTown));
+                // All mission towns, specific giver town
+            else if (missionTown.equals("All Towns") && !giverTown.equals("All Towns"))
+                missionsListAdapter.addAll(db.getAllMissionsFromGiverTown(giverTown));
+                // Specific towns selected for both spinners
+            else
+                missionsListAdapter.addAll(db.getAllMissionsFromBothTowns(missionTown, giverTown));
+    }
 }

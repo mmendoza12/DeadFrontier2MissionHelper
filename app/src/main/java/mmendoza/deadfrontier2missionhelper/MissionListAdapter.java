@@ -75,7 +75,7 @@ public class MissionListAdapter extends ArrayAdapter<Mission> {
         rewardExp.setText(selectedMission.getExp());
 
         // If the mission is completed, change the list item's text color to green
-        if (selectedMission.isCompleted()) {
+        if (selectedMission.isCompleted() == 1) {
 
             missionTitle.setTextColor(ContextCompat.getColor(mContext, R.color.green));
 
