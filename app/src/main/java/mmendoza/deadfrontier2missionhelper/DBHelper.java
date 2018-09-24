@@ -147,7 +147,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(6),
                                 cursor.getString(7),
                                 cursor.getString(8),
-                                cursor.getString(9));
+                                cursor.getString(9),
+                                cursor.getInt(10));
                 missionsList.add(mission);
             } while (cursor.moveToNext());
         }
@@ -183,7 +184,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(6),
                                 cursor.getString(7),
                                 cursor.getString(8),
-                                cursor.getString(9));
+                                cursor.getString(9),
+                                cursor.getInt(10));
                 if (String.valueOf(cursor.getString(1)).equals(missionObjectiveTown))
                     missionsList.add(mission);
             } while (cursor.moveToNext());
@@ -220,7 +222,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(6),
                                 cursor.getString(7),
                                 cursor.getString(8),
-                                cursor.getString(9));
+                                cursor.getString(9),
+                                cursor.getInt(10));
                 if (String.valueOf(cursor.getString(1)).equals(missionObjectiveTown) &&
                         String.valueOf(cursor.getString(5)).equals(questGiverTown))
                     missionsList.add(mission);
@@ -258,7 +261,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(6),
                                 cursor.getString(7),
                                 cursor.getString(8),
-                                cursor.getString(9));
+                                cursor.getString(9),
+                                cursor.getInt(10));
                 if (String.valueOf(cursor.getString(5)).equals(questGiverTown))
                     missionsList.add(mission);
             } while (cursor.moveToNext());

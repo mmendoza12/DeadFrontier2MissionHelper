@@ -39,10 +39,11 @@ public class Mission {
      * @param questGiverWalkthrough Detailed steps on how to find the quest giver.
      * @param money Number representing the amount of money awarded upon completion. ($100)
      * @param exp Number representing the amount of EXP awarded upon completion. (100XP)
+     * @param isCompleted Integer representing a mission completion status as 0 or 1.
      */
     public Mission(String missionLocation, String missionTown, String missionGoal,
                    String missionWalkthrough, String questGiver, String questGiverTown,
-                   String questGiverLocation, String questGiverWalkthrough, String money, String exp)
+                   String questGiverLocation, String questGiverWalkthrough, String money, String exp, int isCompleted)
     {
         mMissionLocation = missionLocation;
         mMissionTown = missionTown;
@@ -54,7 +55,7 @@ public class Mission {
         mQuestGiverWalkthrough = questGiverWalkthrough;
         mMoney = money;
         mExp = exp;
-        mIsCompleted = 0;
+        mIsCompleted = isCompleted;
     }
 
     /**

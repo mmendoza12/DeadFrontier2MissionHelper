@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity{
                 }
                 else {
                     selectedMission.setCompleted(1);
-                    // TODO: Maybe including the completion status in the mission constructor would fix this
                     db.updateMissionCompletionStatus(1, selectedMission.getQuestGiver());
                 }
 
@@ -250,7 +249,7 @@ public class MainActivity extends AppCompatActivity{
              // Create a Mission object from the data
              Mission selectableMission = new Mission(missionLocation.text(), missionTown.text(), missionGoal.text(),
                      missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
-                     questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text());
+                     questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text(), 0);
 
              // Add the mission object to the database
              categoryMissions.add(selectableMission);
