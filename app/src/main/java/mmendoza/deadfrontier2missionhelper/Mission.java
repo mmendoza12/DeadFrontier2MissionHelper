@@ -26,6 +26,9 @@ public class Mission {
     // Personal Completion status
     private int mIsCompleted;
 
+    // The date the mission was available
+    private String mDate;
+
     /**
      * Mission objects to hold the information for each mission.
      *
@@ -40,10 +43,12 @@ public class Mission {
      * @param money Number representing the amount of money awarded upon completion. ($100)
      * @param exp Number representing the amount of EXP awarded upon completion. (100XP)
      * @param isCompleted Integer representing a mission completion status as 0 or 1.
+     * @param date String containing the date the mission was available
      */
     public Mission(String missionLocation, String missionTown, String missionGoal,
                    String missionWalkthrough, String questGiver, String questGiverTown,
-                   String questGiverLocation, String questGiverWalkthrough, String money, String exp, int isCompleted)
+                   String questGiverLocation, String questGiverWalkthrough, String money, String exp,
+                   int isCompleted, String date)
     {
         mMissionLocation = missionLocation;
         mMissionTown = missionTown;
@@ -56,6 +61,7 @@ public class Mission {
         mMoney = money;
         mExp = exp;
         mIsCompleted = isCompleted;
+        mDate = date;
     }
 
     /**
@@ -236,5 +242,19 @@ public class Mission {
         return mQuestGiverLocation + " (" + mQuestGiverTown+ ")";
     }
 
+    /**
+     *
+     * @param date
+     */
+    public void setDate(String date) {
+        mDate = date;
+    }
 
+    /**
+     *
+     * @return
+     */
+    public String getDate() {
+        return mDate;
+    }
 }

@@ -29,6 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String FIELD_REWARD_MONEY = "reward_money";
     public static final String FIELD_REWARD_EXP = "reward_exp";
     public static final String FIELD_COMPLETED = "completed";
+    public static final String FIELD_DATE = "date";
 
     /**
      * Constructs the database.
@@ -48,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createQuery = "CREATE TABLE " + MISSIONS_TABLE + "("
+        String createQuery = "CREATE TABLE IF NOT EXISTS " + MISSIONS_TABLE + "("
                 + FIELD_MISSION_LOCATION + " TEXT, "
                 + FIELD_MISSION_TOWN + " TEXT, "
                 + FIELD_MISSION_GOAL + " TEXT, "
@@ -59,7 +60,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + FIELD_QUEST_GIVER_WALKTHROUGH + " TEXT, "
                 + FIELD_REWARD_MONEY + " TEXT, "
                 + FIELD_REWARD_EXP + " TEXT, "
-                + FIELD_COMPLETED + " INTEGER" + ")";
+                + FIELD_COMPLETED + " INTEGER, "
+                + FIELD_DATE + " TEXT" + ")";
         sqLiteDatabase.execSQL(createQuery);
     }
 
@@ -72,7 +74,8 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        // TODO: Upgrade
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MISSIONS_TABLE);
+        onCreate(sqLiteDatabase);
     }
 
     /**
@@ -96,6 +99,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(FIELD_REWARD_MONEY, mission.getMoney());
         values.put(FIELD_REWARD_EXP, mission.getExp());
         values.put(FIELD_COMPLETED, mission.isCompleted());
+        values.put(FIELD_DATE, mission.getDate());
 
         db.insert(MISSIONS_TABLE, null, values);
         db.close();
@@ -113,11 +117,40 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Updates a mission's info if its quest giver is still on the wikia.
      *
+     * @param mission The updated mission.
      */
-    public void deleteMission(String questGiver)
+    public void updateMission(Mission mission)
     {
-        // TODO: Delete mission if quest giver is no longer on the wikia, this should work i think
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(FIELD_MISSION_LOCATION, mission.getMissionLocation());
+        values.put(FIELD_MISSION_TOWN, mission.getMissionTown());
+        values.put(FIELD_MISSION_GOAL, mission.getMissionGoal());
+        values.put(FIELD_MISSION_WALKTHROUGH, mission.getMissionWalkthrough());
+        values.put(FIELD_QUEST_GIVER_TOWN, mission.getQuestGiverTown());
+        values.put(FIELD_QUEST_GIVER_LOCATION, mission.getQuestGiverLocation());
+        values.put(FIELD_QUEST_GIVER_WALKTHROUGH, mission.getQuestGiverWalkthrough());
+        values.put(FIELD_REWARD_MONEY, mission.getMoney());
+        values.put(FIELD_REWARD_EXP, mission.getExp());
+
+        database.update(MISSIONS_TABLE, values, FIELD_QUEST_GIVER + " = ?",
+                new String[]{String.valueOf(mission.getQuestGiver())});
+        database.close();
+    }
+
+    /**
+     * Deletes mission that have expired dates.
+     *
+     * @param date The current date to compare to.
+     */
+    public void deleteOldMissions(String date)
+    {
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.delete(MISSIONS_TABLE, FIELD_DATE + " != ?", new String[]{date});
+        database.close();
     }
 
     /**
@@ -131,7 +164,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 MISSIONS_TABLE,
                 new String[] {FIELD_MISSION_LOCATION, FIELD_MISSION_TOWN, FIELD_MISSION_GOAL, FIELD_MISSION_WALKTHROUGH,
                 FIELD_QUEST_GIVER, FIELD_QUEST_GIVER_TOWN, FIELD_QUEST_GIVER_LOCATION, FIELD_QUEST_GIVER_WALKTHROUGH,
-                FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED},
+                FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED, FIELD_DATE},
                 null, null, null, null, null, null);
 
         if (cursor.moveToFirst())
@@ -148,7 +181,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(7),
                                 cursor.getString(8),
                                 cursor.getString(9),
-                                cursor.getInt(10));
+                                cursor.getInt(10),
+                                cursor.getString(11));
                 missionsList.add(mission);
             } while (cursor.moveToNext());
         }
@@ -168,7 +202,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 MISSIONS_TABLE,
                 new String[] {FIELD_MISSION_LOCATION, FIELD_MISSION_TOWN, FIELD_MISSION_GOAL, FIELD_MISSION_WALKTHROUGH,
                         FIELD_QUEST_GIVER, FIELD_QUEST_GIVER_TOWN, FIELD_QUEST_GIVER_LOCATION, FIELD_QUEST_GIVER_WALKTHROUGH,
-                        FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED},
+                        FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED, FIELD_DATE},
                 null, null, null, null, null, null);
 
         if (cursor.moveToFirst())
@@ -185,7 +219,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(7),
                                 cursor.getString(8),
                                 cursor.getString(9),
-                                cursor.getInt(10));
+                                cursor.getInt(10),
+                                cursor.getString(11));
                 if (String.valueOf(cursor.getString(1)).equals(missionObjectiveTown))
                     missionsList.add(mission);
             } while (cursor.moveToNext());
@@ -206,7 +241,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 MISSIONS_TABLE,
                 new String[] {FIELD_MISSION_LOCATION, FIELD_MISSION_TOWN, FIELD_MISSION_GOAL, FIELD_MISSION_WALKTHROUGH,
                         FIELD_QUEST_GIVER, FIELD_QUEST_GIVER_TOWN, FIELD_QUEST_GIVER_LOCATION, FIELD_QUEST_GIVER_WALKTHROUGH,
-                        FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED},
+                        FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED, FIELD_DATE},
                 null, null, null, null, null, null);
 
         if (cursor.moveToFirst())
@@ -223,7 +258,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(7),
                                 cursor.getString(8),
                                 cursor.getString(9),
-                                cursor.getInt(10));
+                                cursor.getInt(10),
+                                cursor.getString(11));
                 if (String.valueOf(cursor.getString(1)).equals(missionObjectiveTown) &&
                         String.valueOf(cursor.getString(5)).equals(questGiverTown))
                     missionsList.add(mission);
@@ -245,7 +281,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 MISSIONS_TABLE,
                 new String[] {FIELD_MISSION_LOCATION, FIELD_MISSION_TOWN, FIELD_MISSION_GOAL, FIELD_MISSION_WALKTHROUGH,
                         FIELD_QUEST_GIVER, FIELD_QUEST_GIVER_TOWN, FIELD_QUEST_GIVER_LOCATION, FIELD_QUEST_GIVER_WALKTHROUGH,
-                        FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED},
+                        FIELD_REWARD_MONEY, FIELD_REWARD_EXP, FIELD_COMPLETED, FIELD_DATE},
                 null, null, null, null, null, null);
 
         if (cursor.moveToFirst())
@@ -262,7 +298,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                 cursor.getString(7),
                                 cursor.getString(8),
                                 cursor.getString(9),
-                                cursor.getInt(10));
+                                cursor.getInt(10),
+                                cursor.getString(11));
                 if (String.valueOf(cursor.getString(5)).equals(questGiverTown))
                     missionsList.add(mission);
             } while (cursor.moveToNext());

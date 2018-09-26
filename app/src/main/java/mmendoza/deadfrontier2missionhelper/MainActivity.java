@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity{
 
     // Array to hold Mission objects for the list view
     private ArrayList<Mission> selectedMissionsList = new ArrayList<>();
+    // Array to hold Mission objects from the sync task before adding them to the database.
+    private ArrayList<Mission> wikiaMissionsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         // Create the database
-        deleteDatabase(DBHelper.DATABASE_NAME); // TODO : DO NOT DELETE DB IN FINAL VERSION, INSTEAD FIGURE WAY TO UPDATE DATA
+        //deleteDatabase(DBHelper.DATABASE_NAME); // Used for testing.
         db = new DBHelper(this);
 
         // Start the Jsoup processes
@@ -184,13 +186,33 @@ public class MainActivity extends AppCompatActivity{
                 // Bonus Missions
                 Elements bonusMissions = div.get(3).select("td[style=vertical-align:top;text-align:center;width=450px;]");
 
-                // Separate each category's missions into individual missions and its individual parts
-                // Create lists of mission objects and use them to populate the database
-                db.addAllMissions(createMissions(dallbowMissions));
-                db.addAllMissions(createMissions(haverbrookMissions));
-                db.addAllMissions(createMissions(greywoodMissions));
-                db.addAllMissions(createMissions(bonusMissions));
+                // Delete outdated missions.
+                db.deleteOldMissions(date);
 
+                // Update database.
+                wikiaMissionsList.addAll(createMissions(dallbowMissions));
+                wikiaMissionsList.addAll(createMissions(haverbrookMissions));
+                wikiaMissionsList.addAll(createMissions(greywoodMissions));
+                wikiaMissionsList.addAll(createMissions(bonusMissions));
+                boolean found;
+                int i = 0;
+                int size = db.getAllMissions().size();
+
+                // If mission exists in database and wikia, update database to wikia version.
+                for (Mission wikiaMission : wikiaMissionsList)
+                {
+                    found = false;
+                    while(i < size && !found)
+                    {
+                        if (db.getAllMissions().get(i).getQuestGiver().equals(wikiaMission.getQuestGiver()))
+                            db.updateMission(wikiaMission);
+                        ++i;
+                        found = true;
+                    }
+                    // If mission exist on wikia but is not found on the database, add it to the database.
+                    if (!found)
+                        db.addMission(wikiaMission);
+                }
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -253,7 +275,7 @@ public class MainActivity extends AppCompatActivity{
              // Create a Mission object from the data
              Mission selectableMission = new Mission(missionLocation.text(), missionTown.text(), missionGoal.text(),
                      missionWalkthrough.text(), questGiver.text(), questGiverTown.text(), questGiverLocation.text(),
-                     questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text(), 0);
+                     questGiverWalkthrough.text(), rewardMoney.text(), rewardExp.text(), 0, date);
 
              // Add the mission object to the database
              categoryMissions.add(selectableMission);
