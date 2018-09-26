@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity{
     // URL for Dead Frontier 2 Mission Guide Wikia
     private static final String URL = "http://deadfrontier2.wikia.com/wiki/Mission_guides";
 
-    // Array of town names, used for both spinners
-    String[] towns = {"-- No Town Selected --", "All Towns", "Albandale Park", "Archbrook",
+    // Array of town selections, used for both spinners
+    String[] towns = {"All Towns", "Albandale Park", "Archbrook",
             "Coopertown", "Dallbow", "Dawnhill", "Duntsville", "Greywood", "Haverbrook", "Lerwillbury",
             "Ravenwall Heights", "Richbow Hunt", "South Moorhurst", "West Moledale"};
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity{
     private ListView missionsListView;
     private MissionListAdapter missionsListAdapter;
 
-    // Arrays to hold Mission objects for each of the different cities
+    // Array to hold Mission objects for the list view
     private ArrayList<Mission> selectedMissionsList = new ArrayList<>();
 
     @Override
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity{
         missionsListView = findViewById(R.id.missionsListView);
         missionsListAdapter =
                 new MissionListAdapter(this, R.layout.mission_list_item, selectedMissionsList);
-        missionsListView.setAdapter(missionsListAdapter);
 
         // Mission objective town spinner adapter
         final ArrayAdapter<String> missionTownSpinnerAdapter =
@@ -205,6 +204,11 @@ public class MainActivity extends AppCompatActivity{
 
             // Update the textView with the date
             dateTextView.setText(date);
+
+            // Refresh the spinner and list view adapter once the sync task has finished.
+            spinnerItemSelected(String.valueOf(missionTownSpinner.getSelectedItem()),
+                    String.valueOf(giverTownSpinner.getSelectedItem()));
+            missionsListView.setAdapter(missionsListAdapter);
         }
     }
 
@@ -258,6 +262,7 @@ public class MainActivity extends AppCompatActivity{
          return  categoryMissions;
      }
 
+
     /**
      * Method used by both spinner listeners to filter the different possible combinations of mission and quest giver towns.
      *
@@ -266,7 +271,6 @@ public class MainActivity extends AppCompatActivity{
      */
     public void spinnerItemSelected(String missionTown, String giverTown)
     {
-        // TODO: Use this method instead of repetitive code in both spinner listeners
         // Giver town selected
         if (!missionTown.equals("-- No Town Selected --"))
             // All towns selected for both spinners
