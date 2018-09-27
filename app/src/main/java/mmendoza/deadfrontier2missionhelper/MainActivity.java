@@ -205,9 +205,11 @@ public class MainActivity extends AppCompatActivity{
                     while(i < size && !found)
                     {
                         if (db.getAllMissions().get(i).getQuestGiver().equals(wikiaMission.getQuestGiver()))
+                        {
                             db.updateMission(wikiaMission);
+                            found = true;
+                        }
                         ++i;
-                        found = true;
                     }
                     // If mission exist on wikia but is not found on the database, add it to the database.
                     if (!found)
