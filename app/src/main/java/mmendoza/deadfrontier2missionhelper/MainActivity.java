@@ -194,6 +194,8 @@ public class MainActivity extends AppCompatActivity{
                 wikiaMissionsList.addAll(createMissions(haverbrookMissions));
                 wikiaMissionsList.addAll(createMissions(greywoodMissions));
                 wikiaMissionsList.addAll(createMissions(bonusMissions));
+                System.out.println("*!*!!*!* " + wikiaMissionsList.size());
+                System.out.println("*!*!!*!* " + db.getAllMissions().size());
                 boolean found;
                 int i = 0;
                 int size = db.getAllMissions().size();
@@ -256,7 +258,7 @@ public class MainActivity extends AppCompatActivity{
              // Mission Goal
              Element missionGoal = mission.select("span").get(2);
              // Mission Chunk 1 (divs embedded within div)
-             Element missionChunk1 = mission.select("div").get(3);
+             Element missionChunk1 = mission.select("div").get(4);
              // Mission Walkthrough
              Element missionWalkthrough = missionChunk1.select("p").get(0);
              // Quest Giver

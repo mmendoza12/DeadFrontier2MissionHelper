@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Dead Frontier 2 Mission Helper</string>
 
+    <string name="app_label">Dead Frontier 2 Mission Tracker</string>
+
     <string name="mission_filter">Mission Objective Town: </string>
     <string name="giver_filter">Mission Giver Town: </string>
 
