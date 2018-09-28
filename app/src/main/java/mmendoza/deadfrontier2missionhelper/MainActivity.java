@@ -87,8 +87,6 @@ public class MainActivity extends AppCompatActivity{
                 // Get the selected towns
                 String selected = String.valueOf(spinner.getItemAtPosition(i));
                 String giverTown = String.valueOf(giverTownSpinner.getSelectedItem());
-                // Clear the adapter
-                missionsListAdapter.clear();
                 // Display the selected town's missions
                 spinnerItemSelected(selected, giverTown);
             }
@@ -105,8 +103,6 @@ public class MainActivity extends AppCompatActivity{
                 // Get the selected towns
                 String missionTown = String.valueOf(missionTownSpinner.getSelectedItem());
                 String selected = String.valueOf(spinner.getItemAtPosition(i));
-                // Clear the adapter
-                missionsListAdapter.clear();
                 // Display the selected town's missions
                 spinnerItemSelected(missionTown, selected);
             }
@@ -297,19 +293,20 @@ public class MainActivity extends AppCompatActivity{
      */
     public void spinnerItemSelected(String missionTown, String giverTown)
     {
-        // Giver town selected
-        if (!missionTown.equals("-- No Town Selected --"))
-            // All towns selected for both spinners
-            if (missionTown.equals("All Towns") && giverTown.equals("All Towns"))
-                missionsListAdapter.addAll(db.getAllMissions());
-                // Specific mission town, all giver towns
-            else if (!missionTown.equals("All Towns") && giverTown.equals("All Towns"))
-                missionsListAdapter.addAll(db.getAllMissionsFromMissionTown(missionTown));
-                // All mission towns, specific giver town
-            else if (missionTown.equals("All Towns") && !giverTown.equals("All Towns"))
-                missionsListAdapter.addAll(db.getAllMissionsFromGiverTown(giverTown));
-                // Specific towns selected for both spinners
-            else
-                missionsListAdapter.addAll(db.getAllMissionsFromBothTowns(missionTown, giverTown));
+        // Clear the adapter
+        missionsListAdapter.clear();
+
+        // All towns selected for both spinners
+        if (missionTown.equals("All Towns") && giverTown.equals("All Towns"))
+            missionsListAdapter.addAll(db.getAllMissions());
+        // Specific mission town, all giver towns
+        else if (!missionTown.equals("All Towns") && giverTown.equals("All Towns"))
+            missionsListAdapter.addAll(db.getAllMissionsFromMissionTown(missionTown));
+        // All mission towns, specific giver town
+        else if (missionTown.equals("All Towns") && !giverTown.equals("All Towns"))
+            missionsListAdapter.addAll(db.getAllMissionsFromGiverTown(giverTown));
+        // Specific towns selected for both spinners
+        else
+            missionsListAdapter.addAll(db.getAllMissionsFromBothTowns(missionTown, giverTown));
     }
 }
