@@ -3,6 +3,17 @@
 
     <string name="app_label">Dead Frontier 2 Mission Tracker</string>
 
+    <string name="not_officially_released">This app version was not officially released.</string>
+    <string name="notice">Notice</string>
+    <string name="app_understand">I understand.</string>
+    <string name="ok">OK</string>
+    <string name="app_was_free">\nIf you downloaded this app from the Play Store or paid for this app,
+        \nit was not provided by the owner and was done so without the owner\'s permission.\n</string>
+    <string name="app_provided">This app version was provided by the owner
+        \nin the form of an apk along with a code.\n</string>
+    <string name="enter_code">Enter the code below:</string>
+    <string name="code">192818</string>
+
     <string name="mission_filter">Mission Objective Town: </string>
     <string name="giver_filter">Mission Giver Town: </string>
 

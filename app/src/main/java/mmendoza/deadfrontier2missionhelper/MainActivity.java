@@ -1,11 +1,20 @@
 package mmendoza.deadfrontier2missionhelper;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,7 +27,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     // URL for Dead Frontier 2 Mission Guide Wikia
     private static final String URL = "http://deadfrontier2.wikia.com/wiki/Mission_guides";
@@ -52,6 +61,49 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences sp = getSharedPreferences("sp", MODE_PRIVATE);
+        SharedPreferences.Editor spe = getSharedPreferences("sp", MODE_PRIVATE).edit();
+        class CustomListener implements View.OnClickListener
+        {
+            private final Dialog dialog;
+            public CustomListener(Dialog dialog)
+            {
+                this.dialog = dialog;
+            }
+            public void onClick(View v)
+            {
+                EditText cet = dialog.findViewById(R.id.editText);
+                CheckBox cb = dialog.findViewById(R.id.checkBox);
+                String c = getString(R.string.code);
+                if (String.valueOf(cet.getText()).equals(c) && cb.isChecked())
+                    dialog.dismiss();
+                else
+                {
+                    cb.setChecked(false);
+                    cet.setText("");
+                }
+            }
+        }
+        if (!sp.contains("ftu"))
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            LayoutInflater inf = MainActivity.this.getLayoutInflater();
+            builder.setView(inf.inflate(R.layout.dialog_notice, null)).setCancelable(false)
+                    .setTitle(R.string.notice)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+            Button b = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            b.setOnClickListener(new CustomListener(dialog));
+
+            spe.putBoolean("ftu", true);
+            spe.commit();
+        }
 
         // Create the database
         //deleteDatabase(DBHelper.DATABASE_NAME); // Used for testing.
@@ -190,8 +242,6 @@ public class MainActivity extends AppCompatActivity{
                 wikiaMissionsList.addAll(createMissions(haverbrookMissions));
                 wikiaMissionsList.addAll(createMissions(greywoodMissions));
                 wikiaMissionsList.addAll(createMissions(bonusMissions));
-                System.out.println("*!*!!*!* " + wikiaMissionsList.size());
-                System.out.println("*!*!!*!* " + db.getAllMissions().size());
                 boolean found;
                 int i = 0;
                 int size = db.getAllMissions().size();

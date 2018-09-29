@@ -77,6 +77,16 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/notTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/not_officially_released"/>
+
+    <TextView
         android:id="@+id/spinnerBottomPaddingTextView"
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -85,7 +95,7 @@
     <ListView
         android:id="@+id/missionsListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="wrap_content">
     </ListView>
+
 </LinearLayout>
